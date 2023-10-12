@@ -11,36 +11,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class KeycloakServiceImpl implements KeycloakService {
 
-    @Value("oauth2.keycloak.server-url")
+    @Value("${oauth2.keycloak.server-url}")
     public String serverUrl;
-    @Value("oauth2.keycloak.realm")
+    @Value("${oauth2.keycloak.realm}")
     public String realm;
-    @Value("oauth2.keycloak.client-id")
+    @Value("${oauth2.keycloak.client-id}")
     public String clientId;
-    @Value("oauth2.keycloak.client-secret")
+    @Value("${oauth2.keycloak.client-secret}")
     public String clientSecret;
 
     @Override
-    public AccessTokenResponse loginWithKeycloak(LoginRequest request) {
-        try (Keycloak loginKeycloak = buildKeycloak(request.username(), request.password())) {
-            AccessTokenResponse accessTokenResponse = null;
-            accessTokenResponse = loginKeycloak.tokenManager().getAccessToken();
-            return accessTokenResponse;
-        } catch (Exception e) {
-
-        }
-        return new AccessTokenResponse();
-    }
-
-    private Keycloak buildKeycloak(String username, String password) {
-        return KeycloakBuilder.builder()
+    public AccessTokenResponse login(LoginRequest request) {
+        Keycloak loginKeycloak = KeycloakBuilder.builder()
                 .realm(realm)
                 .serverUrl(serverUrl)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .username(username)
-                .password(password)
+                .username(request.username())
+                .password(request.password())
                 .build();
+        AccessTokenResponse accessTokenResponse = null;
+        accessTokenResponse = loginKeycloak.tokenManager().getAccessToken();
+        return accessTokenResponse;
     }
 
 }

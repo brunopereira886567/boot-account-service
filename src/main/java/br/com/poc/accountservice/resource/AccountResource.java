@@ -21,7 +21,7 @@ public class AccountResource {
 
     @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(@RequestBody LoginRequest request){
-        AccessTokenResponse accessTokenResponse = keycloakService.loginWithKeycloak(request);
+        AccessTokenResponse accessTokenResponse = keycloakService.login(request);
         if (accessTokenResponse == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(accessTokenResponse);
         }
